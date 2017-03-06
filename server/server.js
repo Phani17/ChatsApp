@@ -7,6 +7,7 @@ const port=process.env.PORT ||3000;
 var app=express();
 var server=http.createServer(app);
 var io=socketIO(server);
+const {generateMessage}=require('./utils/message');
 app.use(express.static(publicPath));
 
 io.on('connection',(socket)=>{  //allows to register event listener ,socket represnts individual socket not all users
@@ -20,22 +21,11 @@ io.on('connection',(socket)=>{  //allows to register event listener ,socket repr
 //socket.on lets us setup event handlers for the individual socket. This could be a custom event like "newMessage" or a built-in one like "disconnect"
 //io.on lets us listen for server-wide events like new socket connections. The callback function we create is where we can setup events for that newly connected socket
 //IO.emit() ---emits and event to evry single connection
-  socket.emit('newMessage',{
-    from:'Admin',
-    text:'Welcome to chat app'
-  });
-  socket.broadcast.emit('newMessage',{
-    from:'Admin',
-    text:'New User joined',
-    createdAt:new Date().getTime()
-  });
+  socket.emit('newMessage',generateMessage('Admin','Welcome to chat app'));
+  socket.broadcast.emit('newMessage',generateMessage('Admin','New User joined'));
   socket.on('createMessage',function(message){
     console.log('createMessage',message);
-    io.emit('newMessage',{
-      from:message.from,
-      text:message.text,
-      createdAt:new Date().getTime()
-    });
+    io.emit('newMessage',generateMessage(message.from,message.text));
       // socket.broadcast.emit('newMessage',{
       //   from:message.from,
       //   text:message.text,
