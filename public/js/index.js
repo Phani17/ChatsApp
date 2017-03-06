@@ -10,9 +10,9 @@ socket.on('connect',function(){
 socket.on('disconnect',function(){
   console.log('Disconnected from server');
 });
-// socket.on('newEmail',function (email) { //socket.on lets us setup event handlers for the individual socket. This could be a custom event like "newMessage" or a built-in one like "disconnect"
+// socket.on('newEmail',function (email) { 
 //   console.log('New Email',email);
 // });
-socket.on('newMessage',function (message) { //socket.on lets us setup event handlers for the individual socket. This could be a custom event like "newMessage" or a built-in one like "disconnect"
+socket.on('newMessage',function (message) {
   console.log('New Message',message);
 });
