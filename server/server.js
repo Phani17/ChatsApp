@@ -23,9 +23,10 @@ io.on('connection',(socket)=>{  //allows to register event listener ,socket repr
 //IO.emit() ---emits and event to evry single connection
   socket.emit('newMessage',generateMessage('Admin','Welcome to chat app'));
   socket.broadcast.emit('newMessage',generateMessage('Admin','New User joined'));
-  socket.on('createMessage',function(message){
+  socket.on('createMessage',(message,callback)=>{
     console.log('createMessage',message);
     io.emit('newMessage',generateMessage(message.from,message.text));
+    callback('This is from server');
       // socket.broadcast.emit('newMessage',{
       //   from:message.from,
       //   text:message.text,
