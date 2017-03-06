@@ -16,13 +16,14 @@ io.on('connection',(socket)=>{  //allows to register event listener ,socket repr
   //   text:'Hey. How are u',
   //   createAt:123
   // });
-  socket.emit('newMessage',{
-    from:'john@ex.com',
-    text:'C u den',
-    createAt:456
-  });
+
   socket.on('createMessage',function(message){
     console.log('createMessage',message);
+    io.emit('newMessage',{
+      from:message.from,
+      text:message.text,
+      createdAt:new Date().getTime()
+    });//emits and event to evry single connection
   });
   // socket.on('createEmail',(newEmail)=>{
   //   console.log('createEmail',newEmail);
