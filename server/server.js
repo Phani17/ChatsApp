@@ -29,7 +29,7 @@ io.on('connection',(socket)=>{  //allows to register event listener ,socket repr
       return callback('Name and Room name required');
     }
     socket.join(params.room);
-    console.log(socket.id);
+  //  console.log(socket.id);
     users.removeUser(socket.id);
     users.addUser(socket.id,params.name,params.room);
     io.to(params.room).emit('updateUserList',users.getUserList(params.room));
@@ -43,8 +43,10 @@ io.on('connection',(socket)=>{  //allows to register event listener ,socket repr
     callback();
   });
   socket.on('createMessage',(message,callback)=>{
-    console.log('createMessage',message);
-    io.emit('newMessage',generateMessage(message.from,message.text));
+    var user=users.getUser(socket.id);
+    if(user && isRealString(message.text)){
+        io.to(user.room).emit('newMessage',generateMessage(user.name,message.text));
+    }
     callback();
       // socket.broadcast.emit('newMessage',{
       //   from:message.from,
@@ -57,7 +59,10 @@ io.on('connection',(socket)=>{  //allows to register event listener ,socket repr
   //   console.log('createEmail',newEmail);
   // });
   socket.on('createLocationMessage',(coords)=>{
-    io.emit('newLocationMessage',generateLocationMessage('Admin',coords.latitude,coords.longitude));
+    var user=users.getUser(socket.id);
+    if(user && isRealString(message.text)){
+      io.to(user.room).emit('newLocationMessage',generateLocationMessage(user.name,coords.latitude,coords.longitude));
+    }
   });
   socket.on('disconnect',()=>{
     var user=users.removeUser(socket.id);
